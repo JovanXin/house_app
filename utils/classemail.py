@@ -4,7 +4,10 @@ from string import Template
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-USER_EMAIL = input("Enter your email:")
+
+USER_EMAIL = input("""
+	LOGIN WITH GOOGLE ACCOUNT - You need to allow access from 'less secure' apps
+	Enter your email:""") 
 USER_PASSWORD = input("Enter your password:")
 SUPPORT_EMAIL = "jovan3.1415926@gmail.com"
 
