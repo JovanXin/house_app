@@ -108,7 +108,7 @@ def contact_seller():
 
 		if house.price <= price:
 			email_server = Email(house_name,price,subject,message,buyer_name,buyer_email,owner,seller_email)
-			email_server.contact_house_owner()
+			email_server.main("contact owner")
 		else:
 			print("Sorry, the price you are willing to pay is below the asking value of the owner.")
 

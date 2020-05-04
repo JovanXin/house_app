@@ -70,8 +70,10 @@ class Email:
 
 
 
-	def contact_house_owner(self):
-		self.send_message(self.contact_house_owner)
+	def main(self,option):
+		if option == "contact owner":
+			self.send_message(self.contact_house_owner)
+
 
 
 
