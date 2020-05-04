@@ -24,7 +24,7 @@ def create_house_table():
 				)''') 
 
 
-
+#Inserting house data into the DataBase
 def add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description):
 		with DatabaseConnection("data.db") as connection:	
 			cursor = connection.cursor()
@@ -32,7 +32,7 @@ def add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,
 			cursor.execute('INSERT INTO houses VALUES(?,?,?,?,?,?,?,?,?,?)',(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description))
 
 
-
+#Getting simple data from all house listings
 def get_all_houses():
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()
@@ -43,7 +43,7 @@ def get_all_houses():
 		return [row for row in cursor.fetchall()]
 
 
-
+#Getting full data from specific house listings
 def get_house_info(house_name):
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()
@@ -53,6 +53,7 @@ def get_house_info(house_name):
 		return [row for row in cursor.fetchall()]
 
 
+#deletes house listings 
 def delete_house(house_name):
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()

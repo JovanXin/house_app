@@ -26,6 +26,7 @@ class Email:
 		self.SSL_PORT = 465
 		self.DEFAULT_SUBJECT = "Someone is interested in your house!"
 
+
 	def read_template(self):
 	    """
 	    Returns a Template object comprising the contents of the 
@@ -36,24 +37,27 @@ class Email:
 	    return self.message_template
 
 
-
 	def send_message(self,action):
+		"""
+		Composes the message based on user inputs and emails it
+		"""
 
 		self.msg = MIMEMultipart()
 		self.message_template = self.read_template()
 
 		action()
-
+		#checking if user has defined subject/seller email
 		if self.subject:
 			self.msg["Subject"] = self.subject
 		else:
 			self.msg["Subject"] = self.DEFAULT_SUBJECT	
 
-		self.msg["From"] = USER_EMAIL
 		if self.seller_email:
 			self.msg["To"] = self.seller_email
 		else:
 			self.msg["To"] = SUPPORT_EMAIL
+
+		self.msg["From"] = USER_EMAIL
 
 		self.msg.attach(MIMEText(self.message, 'plain'))
 
@@ -68,6 +72,9 @@ class Email:
 
 
 	def contact_house_owner(self):
+		"""
+		Replaces message template with information to contact house owner
+		"""
 		self.message = self.message_template.substitute(
 			PERSON_NAME=self.owner.title(),
 			MESSAGE_CONTENT=self.message,
@@ -77,12 +84,18 @@ class Email:
 
 
 	def report_listing(self):
+		"""
+		Replaces message template with information to report listing for any reason
+		"""		
 		self.message = self.message_template.substitute(
 			REPORTED_LISTING_NAME=self.house_name,
 			REASON=self.reason)
 
 
 	def main(self,option):
+		"""
+		Main 'menu', with options accessed from app.py
+		"""
 		if option == "contact owner":
 			self.FILENAME = "utils/messages/contact_owner.txt"
 			self.send_message(self.contact_house_owner)

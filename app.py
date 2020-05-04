@@ -87,6 +87,7 @@ def prompt_add_house():
 	database.add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description)
 
 
+#Lists out simple information for each house
 def list_houses():
 	houses = database.get_all_houses()
 	for house in houses:
@@ -94,6 +95,7 @@ def list_houses():
 		print(f"{house.house_name}\n${house.price} house in {house.location}, area:{int(house.inside_area) + int(house.outside_area)}\n")
 
 
+#Emails seller from classemail
 def contact_seller():
 	house_name = input("Which house are you interested in?:")
 	subject = input("Type email subject:")
@@ -113,13 +115,14 @@ def contact_seller():
 		print("Sorry, the price you are willing to pay is below the asking value of the owner.")
 
 
+#Shows detailed information for a specific house in a template
 def prompt_show_house():
 	house_name = input("Please enter the name of the house you'd like to see more about:")
 	house_data = fetch_database_info(house_name)
 	print(HOUSE_TEMPLATE.format(**house_data._asdict()))
 
 
-
+#Prevents the need to fetch database in each individual function
 def fetch_database_info(house_name):
 	houses = database.get_house_info(house_name)
 	for house in houses:
@@ -127,6 +130,7 @@ def fetch_database_info(house_name):
 		return house
 
 
+#Emails support for any listing issues
 def prompt_report_house():
 	house_name = input("Enter which house 'name' you'd like to report:")
 	reason = input("Enter why you'd like to report this house:")
@@ -135,6 +139,7 @@ def prompt_report_house():
 	report.main("report")
 
 
+#Deletes a house listing
 def prompt_delete_house():
 	house_name = input("Enter which house you'd like to remove as a listing:")
 	database.delete_house(house_name)
