@@ -59,7 +59,7 @@ def delete_house(house_name,password):
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()
 
-		cursor.execute('DELETE FROM houses WHERE house_name=? AND password=?', (name,password)) #not sure if this works
+		cursor.execute('DELETE FROM houses WHERE house_name=? AND password=?', (house_name,password)) #not sure if this works
 
 
 

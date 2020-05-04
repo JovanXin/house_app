@@ -1,4 +1,4 @@
-import smtplib, ssl
+mport smtplib, ssl
 
 from string import Template
 

@@ -45,6 +45,7 @@ Outside Area: {outside_area}
 Inside Area: {inside_area}
 Description: {description}"""
 
+
 House = namedtuple("House","house_name price owner email location beds bathrooms outside_area inside_area description")
 ListHouse = namedtuple("ListHouse","house_name price location outside_area inside_area")
 def menu():
@@ -98,34 +99,39 @@ def contact_seller():
 	price = int(input("How much would you be willing to pay for?:")) #could check against houses table to see if greater than asking price
 	message = input("What message would you like to send to the owner?:")
 	buyer_name = input("What is your name?:")
-	buyer_email = input("What is your email?:")
-	houses = database.get_house_info(house_name)
 
-	for house in houses:
-		house = House(*house)
-		seller_email = house.email
-		owner = house.owner
+	house_data = fetch_database_info(house_name)
+	seller_email = house_data.email
+	owner = house_data.owner
 
-		if house.price <= price:
-			email_server = Email(house_name,price,subject,message,buyer_name,buyer_email,owner,seller_email)
-			email_server.main("contact owner")
-		else:
-			print("Sorry, the price you are willing to pay is below the asking value of the owner.")
+	if house_data.price <= price:
+
+		contact = Email(house_name=house_name,price=price,subject=subject,message=message,buyer_name=buyer_name,owner=owner,seller_email=seller_email)
+		contact.main("contact owner")
+	else:
+		print("Sorry, the price you are willing to pay is below the asking value of the owner.")
 
 
 def prompt_show_house():
 	house_name = input("Please enter the name of the house you'd like to see more about:")
+	house_data = fetch_database_info(house_name)
+	print(HOUSE_TEMPLATE.format(**house_data._asdict()))
+
+
+
+def fetch_database_info(house_name):
 	houses = database.get_house_info(house_name)
 	for house in houses:
 		house = House(*house)
-		print(HOUSE_TEMPLATE.format(**house._asdict()))
-
+		return house
 
 
 def prompt_report_house():
 	house_name = input("Enter which house 'name' you'd like to report:")
-	reason = input("Enter why you'd like to report this house")
-	email.report_house(house_name,reason)
+	reason = input("Enter why you'd like to report this house:")
+	seller_email = fetch_database_info(house_name).email
+	report = Email(house_name=house_name,reason=reason,seller_email=seller_email)
+	report.main("report")
 
 
 def prompt_delete_house():
