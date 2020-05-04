@@ -1,0 +1,8 @@
+Dear ${PERSON_NAME}, 
+
+${MESSAGE_CONTENT}
+
+I am willing to pay:${PRICE}
+Please contact me back at: ${BUYER_EMAIL}
+Yours Truly,
+${BUYER_NAME}

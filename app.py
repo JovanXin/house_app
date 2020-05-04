@@ -14,8 +14,7 @@ Purchase'd house -> stripe payment (probably not yet, too advanced)
 from utils import database
 from collections import namedtuple
 import textwrap
-from utils import email
-
+from utils.classemail import Email
 
 USER_CHOICE = """
 Enter:
@@ -102,14 +101,14 @@ def contact_seller():
 	buyer_email = input("What is your email?:")
 	houses = database.get_house_info(house_name)
 
-	email.get_data(EMAIL,PASSWORD)
 	for house in houses:
 		house = House(*house)
 		seller_email = house.email
 		owner = house.owner
 
 		if house.price <= price:
-			email.notify_purchase(house_name,price,subject,message,buyer_name,buyer_email,owner,seller_email)
+			email_server = Email(house_name,price,subject,message,buyer_name,buyer_email,owner,seller_email)
+			email_server.contact_house_owner()
 		else:
 			print("Sorry, the price you are willing to pay is below the asking value of the owner.")
 
@@ -126,7 +125,7 @@ def prompt_show_house():
 def prompt_report_house():
 	house_name = input("Enter which house 'name' you'd like to report:")
 	reason = input("Enter why you'd like to report this house")
-	database.report_house(name)
+	email.report_house(house_name,reason)
 
 
 def prompt_delete_house():
