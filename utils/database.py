@@ -12,7 +12,6 @@ def create_house_table():
 		cursor.execute('''
 			CREATE TABLE IF NOT EXISTS houses(
 				house_name text primary key,
-				password integer,
 				price integer,
 				owner text,
 				email text,
@@ -26,11 +25,11 @@ def create_house_table():
 
 
 
-def add_house(house_name,password,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description):
+def add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description):
 		with DatabaseConnection("data.db") as connection:	
 			cursor = connection.cursor()
 
-			cursor.execute('INSERT INTO houses VALUES(?,?,?,?,?,?,?,?,?,?,?)',(house_name,password,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description))
+			cursor.execute('INSERT INTO houses VALUES(?,?,?,?,?,?,?,?,?,?)',(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description))
 
 
 
@@ -54,12 +53,25 @@ def get_house_info(house_name):
 		return [row for row in cursor.fetchall()]
 
 
-
-def delete_house(house_name,password):
+def delete_house(house_name):
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()
-
-		cursor.execute('DELETE FROM houses WHERE house_name=? AND password=?', (house_name,password)) #not sure if this works
-
+		cursor.execute('DELETE FROM houses WHERE house_name=?', (house_name,)) #not sure if this works
 
 
+# def fetch_password():
+# 	name = input("Enter listing(house) name to fetch from:")
+#     	with DatabaseConnection("data.db") as connection:
+# 		    cursor = connection.cursor()
+# 		    cursor.execute('SELECT * FROM houses WHERE house_name=?',(house_name,))
+# 		    return [row for row in cursor.fetchall()]
+
+
+# def validate_password():
+#   house_data = fetch_password()
+#   for house in house_data:
+#     password = data[1]
+#     if bcrypt.checkpw((input("enter your password").encode("utf-8")), password):
+#       return True
+#     else:
+#       return False

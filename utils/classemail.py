@@ -6,9 +6,10 @@ from email.mime.multipart import MIMEMultipart
 
 
 USER_EMAIL = input("""
-	LOGIN WITH GOOGLE ACCOUNT - You need to allow access from 'less secure' apps
+	LOGIN WITH GOOGLE ACCOUNT - You need to allow access from 'less secure' apps. (This lets you send emails)
 	Enter your email:""") 
-USER_PASSWORD = input("Enter your password:")
+USER_PASSWORD = input("""
+	Enter your password:""")
 SUPPORT_EMAIL = "jovan3.1415926@gmail.com"
 
 class Email:

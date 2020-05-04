@@ -16,6 +16,7 @@ from collections import namedtuple
 import textwrap
 from utils.classemail import Email
 
+
 USER_CHOICE = """
 Enter:
 -'a' to add a new house
@@ -72,7 +73,7 @@ def menu():
 
 def prompt_add_house():
 	house_name = input("Enter listing name:")
-	password = input("Enter.. password?")
+    # hashed_password = bcrypt.hashpw(input("Enter password to access the information:").encode("utf-8"), bcrypt.gensalt())
 	price = input("How much do you want to sell the house for?:")
 	owner = input("Enter house owner:")
 	email = input("Enter email you'd like to be contacted:")
@@ -83,7 +84,7 @@ def prompt_add_house():
 	inside_area = input("Enter inside area, in meters squared:")
 	description = input("Describe the house:")
 
-	database.add_house(house_name,password,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description)
+	database.add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description)
 
 
 def list_houses():
@@ -136,8 +137,8 @@ def prompt_report_house():
 
 def prompt_delete_house():
 	house_name = input("Enter which house you'd like to remove as a listing:")
-	password = input("Enter the password you used to create the listing")
-	database.delete_house(house_name,password)
+	database.delete_house(house_name)
+
 
 
 if __name__ == '__main__':
