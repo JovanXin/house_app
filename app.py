@@ -2,18 +2,34 @@
 A application that allows users to see avaliable houses, and add their own listings. 
 SQLite3
 
-To-Learn:
-Authentication and security
-Hosting databases
-Email-sending -> purchase house -> inform buyer/seller
-Purchase'd house -> stripe payment (probably not yet, too advanced)
+TODO:
+Authentication and security [CANCELED]
+Hosting databases [x]
+Email-sending -> purchase house -> inform buyer/seller [x]
+Clean up functions (make into lambdas) []
+Use multi-line :| []
+Make into flask application (fixes issue #1) []
+Only allow person who created listing to delete []
+Add type hinting []
+
+
+
+ISSUES:
+1)User doesn't have to enter input into all fields when adding house, leading to future errors
+1.FIX) -> Make into flask form, required fields 
+
+2)User login with Google isn't really secure (we're just storing them as plain variables)
+and also they aren't required to enter details
+2.FIX) -> None yet
+
+RESOLVED ISSUES:
 
 """
 
 
-from utils import database
 from collections import namedtuple
-import textwrap
+
+from utils import database
 from utils.classemail import Email
 
 
@@ -49,26 +65,6 @@ Description: {description}"""
 
 House = namedtuple("House","house_name price owner email location beds bathrooms outside_area inside_area description")
 ListHouse = namedtuple("ListHouse","house_name price location outside_area inside_area")
-def menu():
-	database.create_house_table()
-	while True:
-		user_input = input(USER_CHOICE)
-		if user_input == "q":
-			break
-		elif user_input == "a":
-			prompt_add_house()
-		elif user_input == "l":
-			list_houses()
-		elif user_input == "p":
-			contact_seller()
-		elif user_input == "r":
-			prompt_report_house()
-		elif user_input == "d":
-			prompt_delete_house()
-		elif user_input == "s":
-			prompt_show_house()
-		else:
-			print("Unknown command, please try again\n")
 
 
 def prompt_add_house():
@@ -84,7 +80,18 @@ def prompt_add_house():
 	inside_area = input("Enter inside area, in meters squared:")
 	description = input("Describe the house:")
 
-	database.add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description)
+	database.add_house(
+		house_name,
+		price,
+		owner,
+		email,
+		location,
+		beds,
+		bathrooms,
+		outside_area,
+		inside_area,
+		description
+		)
 
 
 #Lists out simple information for each house
@@ -109,7 +116,15 @@ def contact_seller():
 
 	if house_data.price <= price:
 
-		contact = Email(house_name=house_name,price=price,subject=subject,message=message,buyer_name=buyer_name,owner=owner,seller_email=seller_email)
+		contact = Email(
+			house_name=house_name,
+			price=price,
+			subject=subject,
+			message=message,
+			buyer_name=buyer_name,
+			owner=owner,
+			seller_email=seller_email
+			)
 		contact.main("contact owner")
 	else:
 		print("Sorry, the price you are willing to pay is below the asking value of the owner.")
@@ -119,7 +134,15 @@ def contact_seller():
 def prompt_show_house():
 	house_name = input("Please enter the name of the house you'd like to see more about:")
 	house_data = fetch_database_info(house_name)
-	print(HOUSE_TEMPLATE.format(**house_data._asdict()))
+
+	if house_data:
+		try:
+			print(HOUSE_TEMPLATE.format(**house_data._asdict()))
+		except AttributeError:
+			print("Something went wrong with the listing data, please make a report about it")
+	else:
+		print("Not a avaliable listing")
+
 
 
 #Prevents the need to fetch database in each individual function
@@ -135,7 +158,11 @@ def prompt_report_house():
 	house_name = input("Enter which house 'name' you'd like to report:")
 	reason = input("Enter why you'd like to report this house:")
 	seller_email = fetch_database_info(house_name).email
-	report = Email(house_name=house_name,reason=reason,seller_email=seller_email)
+	report = Email(
+		house_name=house_name,
+		reason=reason,
+		seller_email=seller_email
+		)
 	report.main("report")
 
 
@@ -144,6 +171,28 @@ def prompt_delete_house():
 	house_name = input("Enter which house you'd like to remove as a listing:")
 	database.delete_house(house_name)
 
+
+#The menu for the application
+def menu():
+	database.create_house_table()
+	while True:
+		user_input = input(USER_CHOICE).lower()
+		if user_input == "q":
+			break
+		elif user_input in MENU_OPTIONS:
+			MENU_OPTIONS[user_input]()
+		else:
+			print("Not a valid option, try again. ")
+
+
+MENU_OPTIONS = {
+	"a": prompt_add_house,
+	"l": list_houses,
+	"p": contact_seller,
+	"r": prompt_report_house,
+	"d": prompt_delete_house,
+	"s": prompt_show_house
+}
 
 
 if __name__ == '__main__':

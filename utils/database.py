@@ -11,16 +11,16 @@ def create_house_table():
 
 		cursor.execute('''
 			CREATE TABLE IF NOT EXISTS houses(
-				house_name text primary key,
-				price integer,
-				owner text,
-				email text,
-				location text,
-				beds integer,
-				bathrooms integer,
-				outside_area integer,
-				inside_area integer,
-				description text
+					house_name text primary key,
+					price integer,
+					owner text,
+					email text,
+					location text,
+					beds integer,
+					bathrooms integer,
+					outside_area integer,
+					inside_area integer,
+					description text
 				)''') 
 
 
@@ -29,7 +29,18 @@ def add_house(house_name,price,owner,email,location,beds,bathrooms,outside_area,
 		with DatabaseConnection("data.db") as connection:	
 			cursor = connection.cursor()
 
-			cursor.execute('INSERT INTO houses VALUES(?,?,?,?,?,?,?,?,?,?)',(house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description))
+			cursor.execute('INSERT INTO houses VALUES(?,?,?,?,?,?,?,?,?,?)',
+				(
+					house_name,
+					price,owner,
+					email,
+					location,
+					beds,
+					bathrooms,
+					outside_area,
+					inside_area,
+					description
+				))
 
 
 #Getting simple data from all house listings
@@ -40,7 +51,7 @@ def get_all_houses():
 		cursor.execute('''CREATE VIEW showHouses AS SELECT house_name,price,location,outside_area,inside_area FROM houses''')
 		cursor.execute('SELECT * FROM showHouses')
 
-		return [row for row in cursor.fetchall()]
+		return list(cursor.fetchall())
 
 
 #Getting full data from specific house listings
@@ -48,9 +59,20 @@ def get_house_info(house_name):
 	with DatabaseConnection("data.db") as connection:
 		cursor = connection.cursor()
 		cursor.execute('DROP VIEW IF EXISTS showHouses')
-		cursor.execute('''CREATE VIEW showHouses AS SELECT house_name,price,owner,email,location,beds,bathrooms,outside_area,inside_area,description FROM houses''')
+		cursor.execute('''CREATE VIEW showHouses AS SELECT 
+				house_name,
+				price,
+				owner,
+				email,
+				location,
+				beds,
+				bathrooms,
+				outside_area,
+				inside_area,
+				description FROM houses'''
+			)
 		cursor.execute('SELECT * FROM showHouses WHERE house_name=?',(house_name,))
-		return [row for row in cursor.fetchall()]
+		return list(cursor.fetchall())
 
 
 #deletes house listings 
